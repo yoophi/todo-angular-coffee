@@ -1,32 +1,37 @@
 (->
   TodoCtrl = ($scope) ->
-    ctrl = @
-    ctrl.todos = [
-      text: "learn angular"
-      done: true
-    ,
-      text: "buld an angular app"
-      done: false
-    ]
+    init = () =>
+      @todos = [
+        text: "learn angular"
+        done: true
+      ,
+        text: "buld an angular app"
+        done: false
+      ]
 
-    ctrl.addTodo = ->
-      ctrl.todos.push({ text: $scope.todoText, done: false })
+      @addTodo = addTodo
+      @remaining = remaining
+      @archive = archive
+
+    addTodo = =>
+      @todos.push({ text: $scope.todoText, done: false })
       $scope.todoText = ""
 
-    ctrl.remaining = ->
+    remaining = =>
       count = 0
-      angular.forEach ctrl.todos, (todo) ->
+      angular.forEach @todos, (todo) ->
         count += if todo.done then 0 else 1
-          
       count
 
-    ctrl.archive = ->
-      oldTodos = ctrl.todos
-      ctrl.todos = []
-      angular.forEach oldTodos, (todo) ->
-        ctrl.todos.push(todo) unless todo.done
+    archive = =>
+      oldTodos = @todos
+      @todos = []
+      angular.forEach oldTodos, (todo) =>
+        @todos.push(todo) unless todo.done
 
-    return
+    init()
+    ctrl = @
+
 
   angular
     .module('myApp.todo', ['ngRoute'])
