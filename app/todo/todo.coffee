@@ -1,7 +1,7 @@
 'use strict'
 
 class TodoCtrl
-  constructor: ($scope) ->
+  constructor: (@$scope) ->
     $scope.todos = [
       text: "learn angular"
       done: true
@@ -10,23 +10,23 @@ class TodoCtrl
       done: false
     ]
 
-    $scope.addTodo = ->
-      $scope.todos.push({ text: $scope.todoText, done: false })
-      $scope.todoText = ""
+  addTodo: ->
+    @$scope.todos.push({ text: @$scope.todoText, done: false })
+    @$scope.todoText = ""
 
-    $scope.remaining = ->
-      count = 0
-      angular.forEach($scope.todos, (todo) ->
-        count += if todo.done then 0 else 1
-      )
-      count
+  remaining: ->
+    count = 0
+    angular.forEach(@$scope.todos, (todo) ->
+      count += if todo.done then 0 else 1
+    )
+    count
 
-    $scope.archive = ->
-      oldTodos = $scope.todos
-      $scope.todos = []
-      angular.forEach(oldTodos, (todo) ->
-        $scope.todos.push(todo) unless todo.done
-      )
+  archive: ->
+    oldTodos = @$scope.todos
+    @$scope.todos = []
+    angular.forEach(oldTodos, (todo) ->
+      @$scope.todos.push(todo) unless todo.done
+    )
 
 angular.module('myApp.todo', ['ngRoute']).config([
   '$routeProvider'
@@ -34,5 +34,6 @@ angular.module('myApp.todo', ['ngRoute']).config([
     $routeProvider.when '/todo',
       templateUrl: 'todo/todo.html'
       controller: 'TodoCtrl'
+      controllerAs: 'ctrl'
     return
 ]).controller 'TodoCtrl', TodoCtrl

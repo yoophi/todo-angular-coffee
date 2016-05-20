@@ -4,7 +4,8 @@
   var TodoCtrl;
 
   TodoCtrl = (function() {
-    function TodoCtrl($scope) {
+    function TodoCtrl($scope1) {
+      this.$scope = $scope1;
       $scope.todos = [
         {
           text: "learn angular",
@@ -14,32 +15,35 @@
           done: false
         }
       ];
-      $scope.addTodo = function() {
-        $scope.todos.push({
-          text: $scope.todoText,
-          done: false
-        });
-        return $scope.todoText = "";
-      };
-      $scope.remaining = function() {
-        var count;
-        count = 0;
-        angular.forEach($scope.todos, function(todo) {
-          return count += todo.done ? 0 : 1;
-        });
-        return count;
-      };
-      $scope.archive = function() {
-        var oldTodos;
-        oldTodos = $scope.todos;
-        $scope.todos = [];
-        return angular.forEach(oldTodos, function(todo) {
-          if (!todo.done) {
-            return $scope.todos.push(todo);
-          }
-        });
-      };
     }
+
+    TodoCtrl.prototype.addTodo = function() {
+      this.$scope.todos.push({
+        text: this.$scope.todoText,
+        done: false
+      });
+      return this.$scope.todoText = "";
+    };
+
+    TodoCtrl.prototype.remaining = function() {
+      var count;
+      count = 0;
+      angular.forEach(this.$scope.todos, function(todo) {
+        return count += todo.done ? 0 : 1;
+      });
+      return count;
+    };
+
+    TodoCtrl.prototype.archive = function() {
+      var oldTodos;
+      oldTodos = this.$scope.todos;
+      this.$scope.todos = [];
+      return angular.forEach(oldTodos, function(todo) {
+        if (!todo.done) {
+          return this.$scope.todos.push(todo);
+        }
+      });
+    };
 
     return TodoCtrl;
 
@@ -49,7 +53,8 @@
     '$routeProvider', function($routeProvider) {
       $routeProvider.when('/todo', {
         templateUrl: 'todo/todo.html',
-        controller: 'TodoCtrl'
+        controller: 'TodoCtrl',
+        controllerAs: 'ctrl'
       });
     }
   ]).controller('TodoCtrl', TodoCtrl);
