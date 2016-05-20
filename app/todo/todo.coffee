@@ -1,8 +1,7 @@
-'use strict'
-
-class TodoCtrl
-  constructor: (@$scope) ->
-    $scope.todos = [
+(->
+  TodoCtrl = ($scope) ->
+    ctrl = @
+    ctrl.todos = [
       text: "learn angular"
       done: true
     ,
@@ -10,30 +9,36 @@ class TodoCtrl
       done: false
     ]
 
-  addTodo: ->
-    @$scope.todos.push({ text: @$scope.todoText, done: false })
-    @$scope.todoText = ""
+    ctrl.addTodo = ->
+      ctrl.todos.push({ text: $scope.todoText, done: false })
+      $scope.todoText = ""
 
-  remaining: ->
-    count = 0
-    angular.forEach(@$scope.todos, (todo) ->
-      count += if todo.done then 0 else 1
-    )
-    count
+    ctrl.remaining = ->
+      count = 0
+      angular.forEach ctrl.todos, (todo) ->
+        count += if todo.done then 0 else 1
+          
+      count
 
-  archive: ->
-    oldTodos = @$scope.todos
-    @$scope.todos = []
-    angular.forEach(oldTodos, (todo) ->
-      @$scope.todos.push(todo) unless todo.done
-    )
+    ctrl.archive = ->
+      oldTodos = ctrl.todos
+      ctrl.todos = []
+      angular.forEach oldTodos, (todo) ->
+        ctrl.todos.push(todo) unless todo.done
 
-angular.module('myApp.todo', ['ngRoute']).config([
-  '$routeProvider'
-  ($routeProvider) ->
-    $routeProvider.when '/todo',
-      templateUrl: 'todo/todo.html'
-      controller: 'TodoCtrl'
-      controllerAs: 'ctrl'
     return
-]).controller 'TodoCtrl', TodoCtrl
+
+  angular
+    .module('myApp.todo', ['ngRoute'])
+    .config([
+      '$routeProvider'
+      ($routeProvider) ->
+        $routeProvider.when '/todo',
+          templateUrl: 'todo/todo.html'
+          controller: 'TodoCtrl'
+          controllerAs: 'ctrl'
+        return
+    ])
+    .controller('TodoCtrl', TodoCtrl)
+)()
+
