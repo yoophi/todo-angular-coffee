@@ -4,9 +4,9 @@
   var TodoCtrl;
 
   TodoCtrl = (function() {
-    function TodoCtrl($scope1) {
-      this.$scope = $scope1;
-      $scope.todos = [
+    function TodoCtrl($scope) {
+      this.$scope = $scope;
+      this.$scope.todos = [
         {
           text: "learn angular",
           done: true
@@ -38,16 +38,20 @@
       var oldTodos;
       oldTodos = this.$scope.todos;
       this.$scope.todos = [];
-      return angular.forEach(oldTodos, function(todo) {
-        if (!todo.done) {
-          return this.$scope.todos.push(todo);
-        }
-      });
+      return angular.forEach(oldTodos, (function(_this) {
+        return function(todo) {
+          if (!todo.done) {
+            return _this.$scope.todos.push(todo);
+          }
+        };
+      })(this));
     };
 
     return TodoCtrl;
 
   })();
+
+  TodoCtrl.$inject = ['$scope'];
 
   angular.module('myApp.todo', ['ngRoute']).config([
     '$routeProvider', function($routeProvider) {

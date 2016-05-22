@@ -2,7 +2,7 @@
 
 class TodoCtrl
   constructor: (@$scope) ->
-    $scope.todos = [
+    @$scope.todos = [
       text: "learn angular"
       done: true
     ,
@@ -24,9 +24,11 @@ class TodoCtrl
   archive: ->
     oldTodos = @$scope.todos
     @$scope.todos = []
-    angular.forEach(oldTodos, (todo) ->
+    angular.forEach(oldTodos, (todo) =>
       @$scope.todos.push(todo) unless todo.done
     )
+
+TodoCtrl.$inject = ['$scope']
 
 angular.module('myApp.todo', ['ngRoute']).config([
   '$routeProvider'
